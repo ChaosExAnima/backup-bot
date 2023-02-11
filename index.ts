@@ -91,7 +91,7 @@ async function startBackup(client: Client<true>) {
 					}
 				);
 				stream.write('[\n');
-				await iterateChannel(channel, channel.lastMessageId, stream);
+				await saveMessages(channel, channel.lastMessageId, stream);
 				stream.write('\n]');
 				stream.close();
 			})()
@@ -109,7 +109,7 @@ interface LogMessage {
 	attachments?: string[];
 }
 
-async function iterateChannel(
+async function saveMessages(
 	channel: TextChannel,
 	lastId: string,
 	stream: WriteStream
@@ -119,18 +119,6 @@ async function iterateChannel(
 		before: lastId,
 	});
 
-	await saveMessages(messages, channel, stream);
-	log('Saved', messages.size, 'messages from', chalk.magenta(channel.name));
-	if (messages.size === 100) {
-		return iterateChannel(channel, messages.lastKey(), stream);
-	}
-}
-
-async function saveMessages(
-	messages: Collection<string, Message<true>>,
-	channel: TextChannel,
-	stream: WriteStream
-) {
 	for (const message of messages.values()) {
 		if (!message.content) {
 			continue;
@@ -151,6 +139,10 @@ async function saveMessages(
 			);
 		}
 		stream.write(JSON.stringify(logMessage, null, '\t') + ',\n');
+	}
+	log('Saved', messages.size, 'messages from', chalk.magenta(channel.name));
+	if (messages.size === 100) {
+		return saveMessages(channel, messages.lastKey(), stream);
 	}
 }
 
