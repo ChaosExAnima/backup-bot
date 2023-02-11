@@ -1,4 +1,4 @@
-# backup-bot
+# Discord Backup Bot
 This is a little tool that backs up Discord servers. It's pretty basic right now, just downloading the first server the bot is attached to and grabbing
 all messages and attachments from all channels it has access to.
 
