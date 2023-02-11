@@ -6,11 +6,15 @@ import {
 	Collection,
 	Events,
 	GatewayIntentBits,
-	Message,
 	TextChannel,
 } from 'discord.js';
-import { createWriteStream, constants as fsConstants, WriteStream } from 'fs';
-import { access, mkdir, readFile } from 'fs/promises';
+import {
+	createWriteStream,
+	constants as fsConstants,
+	WriteStream,
+	readFileSync,
+} from 'fs';
+import { access, mkdir } from 'fs/promises';
 import { basename, resolve } from 'path';
 import * as https from 'https';
 
@@ -29,7 +33,7 @@ const log: LogFunc = (...input) =>
 
 let token: string;
 try {
-	const configData = await readFile('./config.json', { encoding: 'utf-8' });
+	const configData = readFileSync('./config.json', { encoding: 'utf-8' });
 	const config = JSON.parse(configData) as { token: string };
 	token = config.token;
 } catch (err) {

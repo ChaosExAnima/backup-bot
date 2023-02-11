@@ -1,4 +1,5 @@
 node_modules
 backup
+backup.js
 config.json
 yarn-error.log
